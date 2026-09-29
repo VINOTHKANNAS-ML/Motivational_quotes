@@ -1,0 +1,27 @@
+name: Send WhatsApp Motivational Quote
+
+on:
+  schedule:
+    # Times below are UTC, converted from IST (UTC+5:30) for 5am, 8am, 11am, 2pm, 5pm, 8pm IST
+    - cron: "30 23,2,5,8,11,14 * * *"
+  workflow_dispatch: {} # lets you trigger it manually to test
+
+jobs:
+  send-quote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Send quote
+        env:
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_NUMBER_ID: ${{ secrets.PHONE_NUMBER_ID }}
+          MY_WHATSAPP_TO: ${{ secrets.MY_WHATSAPP_TO }}
+          TEMPLATE_NAME: ${{ secrets.TEMPLATE_NAME }}
+        run: node send-quote.js
